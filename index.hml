@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quote</title>
+    <style>
+* {
+  padding: 0;
+  margin: 0;
+}
+i {
+  font-size: 50%;
+  font-weight: normal !important;
+  text-transform: capitalize;
+}
+body {
+  font-family: sans-serif;
+  background: linear-gradient(to right,pink,red,orange,yellow,green,blue,purple,brown,grey,silver,gold,black,lightpink,red,orange,lightyellow,lightgreen,lightblue,purple,brown,lightgray,black,silver,gold,black);
+  color: #fff;
+  font-size: 100%;
+  text-align: center;
+}
+p {
+  font-size: 150%;
+  font-weight: bold;
+  padding: 3%;
+  margin-top: 3%;
+}
+.q {
+  background: #00000045;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+  padding: 2%;
+  font-size: 110%;
+  color: #fff;
+  opacity: 0.75;
+  transition: 0.2s;
+  border: none;
+  border-radius: 12px;
+}
+.q:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.q:focus {
+  outline: 0;
+}
+.a {
+  border-radius: 50%;
+  opacity: 0.75;
+  padding: 1%;
+  color: #fff;
+  background: dodgerblue;
+  transition: 0.2s;
+  bottom: 1%;
+  right: 1%;
+  position: fixed;
+  font-size: 110%;
+  width: 60px;
+  height: 55px;
+  border: none;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.a:hover .p {
+  float: right;
+}
+
+.a:hover {
+  opacity: 1;
+  width: 26%;
+  height: 55px;
+  border-radius: 200px;
+  text-align: left;
+  padding: 0.4%;
+}
+#sh {
+  display: none;
+  margin-left: 25%;
+}
+.a:hover #sh {
+  display: inline-block;
+}
+.a:focus {
+  outline: 0;
+}
+.a:hover .p {
+  margin-right: 10%;
+}
+#dialogoverlay{
+	display: none;
+	opacity: .2;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background: #000;
+	width: 100%;
+	z-index: 10;
+}
+#dialogbox{
+	display: none;
+	position: fixed;
+	border-radius:7px;
+	width:550px;
+	z-index: 10;
+}
+#dialogbox > div{ background:#FFF; margin:8px;border-radius:13px}
+#dialogbox > div > #dialogboxhead{ border-radius:12px 12px 0 0;background: #eee; font-size:19px; padding:10px; color:#CCC;border-left:0.5px solid #707070;border-right:0.5px solid #707070;border-top:0.5px solid #707070;}
+#dialogbox > div > #dialogboxbody{ background: #fff; padding:20px; color:#606060;border-left:0.5px solid #707070;border-right:0.5px solid #707070;}
+#dialogbox > div > #dialogboxfoot{ border-radius:0 0 12px 12px;background: #eee; padding:10px; text-align:right;border-left:0.5px solid #707070;border-right:0.5px solid #707070;border-bottom:0.5px solid #707070;}
+#dialogboxbody input {
+  border: none;
+  border-bottom: 2px solid #707070;
+  border-radius: 0px;
+  color: #373737;
+  padding: 1%;
+  width: 80%;
+  transition: 0.2s;
+}
+#dialogboxbody input:focus {
+  color: dodgerblue;
+  border: none;
+  border-bottom: 2px solid dodgerblue;
+}
+#dialogboxfoot button {
+  background: dodgerblue;
+  opacity: 0.75;
+  font-size: 100%;
+  color: #fff;
+  border: none;
+  padding: 2%;
+  border-radius: 12px;
+  transition: 0.2s;
+}
+#dialogboxfoot button:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+*:focus {
+  outline: 0;
+}
+    </style>
+  </head>
+  <body>
+    <div class="c">
+      <p class="quote"></p>
+    </div>
+    <button class="q" onclick="newQuote()">Regenerate</button><br>
+    <button class="a" onclick="addQuote()"><span id="sh">New Quote</span><span class="p">+</span></button>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+      <div>
+        <div id="dialogboxhead"></div>
+        <div id="dialogboxbody"></div>
+        <div id="dialogboxfoot"></div>
+      </div>
+    </div>
+    <script>
+function CustomPrompt(){
+  this.render = function(dialog,func){
+    var winW = window.innerWidth;
+    var winH = window.innerHeight;
+    var dialogoverlay = document.getElementById('dialogoverlay');
+    var dialogbox = document.getElementById('dialogbox');
+    dialogoverlay.style.display = "block";
+    dialogoverlay.style.height = winH+"px";
+    dialogbox.style.left = (winW/2) - (550 * .5)+"px";
+    dialogbox.style.top = "0px";
+    dialogbox.style.display = "block";
+    document.getElementById('dialogboxbody').innerHTML = dialog;
+    document.getElementById('dialogboxbody').innerHTML += '<br><br><input id="prompt_value1" required>';
+    document.getElementById('dialogboxfoot').innerHTML = '<button onclick="Prompt.ok(\''+func+'\')">OK</button>';
+  }
+  this.ok = function(func){
+    var prompt_value1 = document.getElementById('prompt_value1').value;
+    if(prompt_value1 === null || prompt_value1 === "" || prompt_value1 === " "){
+      return false;
+    } else {
+      window[func](prompt_value1);
+      document.getElementById('dialogbox').style.display = "none";
+      document.getElementById('dialogoverlay').style.display = "none";
+    }
+  }
+}
+var Prompt = new CustomPrompt();
+window.onload = function(){
+  newQuote();
+  myName();
+};
+var max = 319;
+var quotes = [
+  '"Fire"',
+  '"Earth"',
+  '"Water"',
+  '"Ice"',
+  '"Grass"',
+  '"Wind"',
+  '"Blood"',
+  '"Peace"',
+  '"Life"',
+  '"Heal"',
+  '"Life Drainer"',
+  '"Laser"',
+  '"Explosion"',
+  '"Strengh"',
+  '"Speed"',
+  '"Bubbles"',
+  '"Lava"',
+  '"Volcano"',
+  '"Massive"',
+  '"Rock"',
+  '"Vine"',
+  '"Thorns"',
+  '"Tree"',
+  '"Cloaker"',
+  '"Mind Reader"',
+  '"Legendary"',
+  '"Blizzard"',
+  '"Tornado"',
+  '"Hurricane"',
+  '"Red"',
+  '"Orange"',
+  '"Yellow"',
+  '"Green"',
+  '"Blue"',
+  '"Purple"',
+  '"Pink"',
+  '"Grey"',
+  '"Black"',
+  '"White"',
+  '"Brown"',
+  '"Light"',
+  '"Darkness"',
+  '"Multiple Heads"',
+  '"Ashes"',
+  '"Snowman"',
+  '"Human"',
+  '"Bells"',
+  '"Pumpkin"',
+  '"Power Hungry"',
+  '"Sand"',
+  '"Shark"',
+  '"Spiky"',
+  '"Swords"',
+  '"Musical"',
+  '"Amber"',
+  '"Gold"',
+  '"Poop"',
+  '"Pee"',
+  '"Diamond"',
+  '"Quasar"',
+  '"Black Hole"',
+  '"Pulsar"',
+  '"Cannon"',
+  '"Gun"',
+  '"Clouds"',
+  '"Storm"',
+  '"Lightning"',
+  '"Thunder"',
+  '"Rainbow"',
+  '"Rain"',
+  '"Snow"',
+  '"Hail"',
+  '"Hell"',
+  '"Hurricane"',
+  '"Fly"',
+  '"Math"',
+  '"Poison"',
+  '"Slowness"',
+  '"Freddy Cougar"',
+  '"English"',
+  '"Time"',
+  '"Mountain"',
+  '"Fissure"',
+  '"Earthquake"',
+  '"Duck"',
+  '"Titanium"',
+  '"Ruby"',
+  '"Saphire"',
+  '"Sap"',
+  '"Blood Sucker"',
+  '"Bat"',
+  '"Vampire"',
+  '"Wooden Steak"',
+  '"Steak"',
+  '"Pork"',
+  '"Coal"',
+  '"Iron"',
+  '"Carpet"',
+  '"Dinosaur"',
+  '"Alarm"',
+  '"Security"',
+  '"Jail"',
+  '"Tower"',
+  '"Wood"',
+  '"Stone"',
+  '"Mutton"',
+  '"Trash"',
+  '"Storage"',
+  '"Merchant"',
+  '"Mail"',
+  '"Defender"',
+  '"Wool"',
+  '"Outlet"',
+  '"Grape"',
+  '"Plum"',
+  '"Orange Fruit"',
+  '"Apple"',
+  '"Watermelon"',
+  '"Melon"',
+  '"Burger"',
+  '"Taco"',
+  '"Graphite"',
+  '"Chair"',
+  '"Fries"',
+  '"Fat"',
+  '"Thin"',
+  '"Skrill"',
+  '"Boy"',
+  '"Girl"',
+  '"Tape"',
+  '"Glue"',
+  '"Feathers"',
+  '"Howl"',
+  '"Tweet"',
+  '"Squeak"',
+  '"1"',
+  '"2"',
+  '"3"',
+  '"4"',
+  '"5"',
+  '"6"',
+  '"7"',
+  '"8"',
+  '"9"',
+  '"10"',
+  '"Spots"',
+  '"Stripes"',
+  '"Speckled"',
+  '"Shell"',
+  '"Turtle Shell"',
+  '"Short"',
+  '"Tall"',
+  '"Big"',
+  '"Medium"',
+  '"Small"',
+  '"Long Necked"',
+  '"Fartnugget"',
+  '"Fart"',
+  '"Nugget"',
+  '"Shadow"',
+  '"Invisible"',
+  '"Quicksand"',
+  '"White Hole"',
+  '"Blue Fire"',
+  '"Furry"',
+  '"Scar"',
+  '"Scary"',
+  '"Ghost"',
+  '"Phantom"',
+  '"Teeth"',
+  '"Grazer"',
+  '"Cow"',
+  '"Summer"',
+  '"Winter"',
+  '"Fall"',
+  '"Spring"',
+  '"Aura"',
+  '"Short Necked"',
+  '"Money"',
+  '"Smart"',
+  '"Common"',
+  '"Rare"',
+  '"Mountain Sized"',
+  '"Dagger"',
+  '"Turn Into Human"',
+  '"Ugly"',
+  '"Beautiful"',
+  '"Web"',
+  '"Spider"',
+  '"Strong Jawed"',
+  '"Wall Climber"',
+  '"Stink Breath"',
+  '"Booger"',
+  '"Glitch"',
+  '"Slowness"',
+  '"Agile"',
+  '"Sleepy"',
+  '"Destruction"',
+  '"Butler"',
+  '"Food"',
+  '"Strawberry"',
+  '"Fairy"',
+  '"Wyvern"',
+  '"Normal"',
+  '"Hero"',
+  '"Liar"',
+  '"Crafter"',
+  '"King"',
+  '"Lion"',
+  '"Electrical"',
+  '"Thermal"',
+  '"Kinetic"',
+  '"Potential"',
+  '"Elastic"',
+  '"Bird"',
+  '"Radiator"',
+  '"Conducter"',
+  '"Insulator"',
+  '"Bug"',
+  '"Skeletal"',
+  '"Decomposer"',
+  '"Zombie"',
+  '"Flesh Eater"',
+  '"Haunter"',
+  '"Grim"',
+  '"Militaristic"',
+  '"Cat"',
+  '"Dog"',
+  '"Viking"',
+  '"Dad"',
+  '"Mom"',
+  '"Square"',
+  '"Rectangle"',
+  '"Circle"',
+  '"Charcoal"',
+  '"Spiky"',
+  '"Sniffer"',
+  '"Hunter"',
+  '"Multiple Wings"',
+  '"Fire Body"',
+  '"Ice Body"',
+  '"Weed"',
+  '"Fissure"',
+  '"Flamethrower"',
+  '"Never Ending Flame"',
+  '"Ice Breath"',
+  '"Utters"',
+  '"Mud"',
+  '"Saw"',
+  '"Clay"',
+  '"Sky"',
+  '"Fish"',
+  '"Fish"',
+  'Fish"',
+  '"Fish"',
+  '"Butterfly"',
+  '"Cocoon"',
+  '"Loud Roar"',
+  '"Supersonic"',
+  '"Speed of Light"',
+  '"Speed of Sound"',
+  '"Moon"',
+  '"Planet Core"',
+  '"Sun"',
+  '"Earth"',
+  '"Jupiter"',
+  '"Venus"',
+  '"Neptune"',
+  '"Mars"',
+  '"Mercury"',
+  '"Pluto"',
+  '"Uranus"',
+  '"Jupiter Moons"',
+  '"Titan"',
+  '"Werewolf"',
+  '"Wolf"',
+  '"Frakenstein"',
+  '"Mimicer"',
+  '"School"',
+  '"Teacher"',
+  '"Devil"',
+  '"Demon"',
+  '"Angel"',
+  '"Zeus"',
+  '"Posioden"',
+  '"Hades"',
+  '"Demeter"',
+  '"Apollo"',
+  '"Hera"',
+  '"Cerberus"',
+  '"Scribblenauts Monster"',
+  '"Minotaur"',
+  '"Pegasus"',
+  '"Horse"',
+  '"Centaur"',
+  '"Goatman"',
+  '"Fog"',
+  '"Camo"',
+  '"Dancer"',
+  '"Musician"',
+  '"Binocular Vision"',
+  '"Saltwater"',
+  '"Freshwater"',
+  '"Stream"',
+  '"Spring"',
+  '"Lake"',
+  '"Creek"',
+  '"Cave Dweller"',
+  '"Yeti"',
+  '"Tree Climber"',
+  '"Oofer"',
+  '"Holy"',
+  '"Priest"',
+  '"Funny Sound"',
+  '"Funny Lookin´"',
+  '"Funny Smelling"',
+  '"Prankster"',
+  '"Cyborg"',
+  '"Android"',
+  '"Medicine"', 
+];
+var user = null;
+function myName(){
+  Prompt.render('Enter Your Full Name','setName');
+}
+function setName(val){
+  user = val;
+}
+function addQuote(){
+  Prompt.render('What do you want your abjective to be?', 'getQuote');
+}
+function getQuote(quote){
+  if(quote === " " || quote === "" || quote === null || quote === undefined){
+    addQuote();
+  } else {
+    quotes.push(`"${quote}"<br><i style="font-size:50%">~${user}</i>`);
+    max = eval(max + 1);
+  }
+}
+var prev;
+function newQuote(){
+  let ans = Math.floor(Math.random() * max) + 0;
+  let res = document.getElementsByClassName('quote')[0];
+  res.innerHTML = quotes[ans];
+};
+    </script>
+  </body>
+</html>
